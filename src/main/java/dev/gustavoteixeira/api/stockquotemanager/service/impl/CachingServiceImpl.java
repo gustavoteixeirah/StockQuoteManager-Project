@@ -1,7 +1,7 @@
 package dev.gustavoteixeira.api.stockquotemanager.service.impl;
 
 import dev.gustavoteixeira.api.stockquotemanager.client.StockManagerClient;
-import dev.gustavoteixeira.api.stockquotemanager.dto.Stock;
+import dev.gustavoteixeira.api.stockquotemanager.dto.StockDTO;
 import dev.gustavoteixeira.api.stockquotemanager.service.CachingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class CachingServiceImpl implements CachingService {
         /**
          * Get the currently registered stocks
          */
-        List<Stock> stocks = stockManager.getAllStocks();
+        List<StockDTO> stocks = stockManager.getAllStocks();
 
         /**
          * Map the Stock Object into String object (that is, only the name of the stock)
@@ -30,7 +30,7 @@ public class CachingServiceImpl implements CachingService {
          */
         registeredStocks.addAll(
                 stocks.stream()
-                        .map(Stock::getId)
+                        .map(StockDTO::getId)
                         .collect(Collectors.toList()));
     }
 

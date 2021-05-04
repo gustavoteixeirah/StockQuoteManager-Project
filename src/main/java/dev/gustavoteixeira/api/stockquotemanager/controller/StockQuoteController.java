@@ -1,7 +1,7 @@
 package dev.gustavoteixeira.api.stockquotemanager.controller;
 
 
-import dev.gustavoteixeira.api.stockquotemanager.dto.StockQuote;
+import dev.gustavoteixeira.api.stockquotemanager.dto.StockQuoteDTO;
 import dev.gustavoteixeira.api.stockquotemanager.service.StockQuoteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ public class StockQuoteController {
      * Create a Stock Quote
      */
     @PostMapping
-    public ResponseEntity<Void> createNewStockQuote(@RequestBody StockQuote stockQuote) {
+    public ResponseEntity<Void> createNewStockQuote(@RequestBody StockQuoteDTO stockQuote) {
         logger.info("StockQuoteController.createNewStockQuote - Start - Stock quote identifier: {}.", stockQuote.getId());
 
         stockQuoteService.createNewStockQuote(stockQuote);
@@ -45,7 +45,7 @@ public class StockQuoteController {
      * Read a Stock Quote by id
      */
     @GetMapping("/{stockId}")
-    public ResponseEntity<StockQuote> getStockQuoteById(@PathVariable String stockId) {
+    public ResponseEntity<StockQuoteDTO> getStockQuoteById(@PathVariable String stockId) {
         logger.info("StockQuoteController.getStockQuoteById - Start - Stock quote identifier: {}.", stockId);
         return ResponseEntity.ok(stockQuoteService.getStockQuoteById(stockId));
     }
@@ -54,7 +54,7 @@ public class StockQuoteController {
      * Read all Stock Quotes
      */
     @GetMapping
-    public ResponseEntity<Set<StockQuote>> getStockQuote() {
+    public ResponseEntity<Set<StockQuoteDTO>> getStockQuote() {
         logger.info("StockQuoteController.getStockQuote - Start.");
         return ResponseEntity.ok(stockQuoteService.getAllStockQuotes());
     }

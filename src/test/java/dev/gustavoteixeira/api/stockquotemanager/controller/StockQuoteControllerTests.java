@@ -1,6 +1,6 @@
 package dev.gustavoteixeira.api.stockquotemanager.controller;
 
-import dev.gustavoteixeira.api.stockquotemanager.dto.StockQuote;
+import dev.gustavoteixeira.api.stockquotemanager.dto.StockQuoteDTO;
 import dev.gustavoteixeira.api.stockquotemanager.exception.StockNotFoundException;
 import dev.gustavoteixeira.api.stockquotemanager.exception.StockNotRegisteredException;
 import dev.gustavoteixeira.api.stockquotemanager.service.StockQuoteService;
@@ -34,9 +34,9 @@ class StockQuoteControllerTests {
 
     @Test
     void creatingNewStockQuoteShouldReturnStatusIsCreated() throws Exception {
-        StockQuote requestBody = getStockQuote(ID);
+        StockQuoteDTO requestBody = getStockQuote(ID);
 
-        doNothing().when(stockQuoteService).createNewStockQuote(any(StockQuote.class));
+        doNothing().when(stockQuoteService).createNewStockQuote(any(StockQuoteDTO.class));
 
         mvc.perform(post("/stock-quote")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -48,10 +48,10 @@ class StockQuoteControllerTests {
 
     @Test
     void creatingNewStockQuoteThatDoesNotExistShouldReturnStatusBadRequest() throws Exception {
-        StockQuote requestBody = getStockQuote(NONEXISTENT_ID);
+        StockQuoteDTO requestBody = getStockQuote(NONEXISTENT_ID);
 
         doThrow(StockNotRegisteredException.class)
-                .when(stockQuoteService).createNewStockQuote(any(StockQuote.class));
+                .when(stockQuoteService).createNewStockQuote(any(StockQuoteDTO.class));
 
         mvc.perform(post("/stock-quote")
                 .contentType(MediaType.APPLICATION_JSON)

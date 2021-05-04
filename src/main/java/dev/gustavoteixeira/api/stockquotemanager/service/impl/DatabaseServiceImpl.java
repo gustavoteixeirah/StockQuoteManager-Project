@@ -1,76 +1,83 @@
 package dev.gustavoteixeira.api.stockquotemanager.service.impl;
 
-import dev.gustavoteixeira.api.stockquotemanager.dto.StockQuote;
+import dev.gustavoteixeira.api.stockquotemanager.dto.StockQuoteDTO;
+import dev.gustavoteixeira.api.stockquotemanager.entity.QuoteEntity;
 import dev.gustavoteixeira.api.stockquotemanager.exception.StockNotFoundException;
+import dev.gustavoteixeira.api.stockquotemanager.repository.QuoteRepository;
 import dev.gustavoteixeira.api.stockquotemanager.service.DatabaseService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+
+import static java.util.stream.Collectors.groupingBy;
 
 @Service
 public class DatabaseServiceImpl implements DatabaseService {
 
+    @Autowired
+    private QuoteRepository quoteRepository;
 
-    static Set<StockQuote> stocksQuotesList = new HashSet<>();
 
     @Override
-    public void persistStockQuote(StockQuote newStockQuote) {
+    public void persistStockQuote(StockQuoteDTO newStockQuote) {
         logger.info("DatabaseServiceImpl.persistStockQuote - Start - Stock quote name: {}.", newStockQuote.getId());
-        /**
-         * Search in the database by stock name
-         */
-        Optional<StockQuote> stockQuoteFromDatabaseOptional = findStockQuoteById(newStockQuote.getId());
-        /**
-         * If the stock is already present
-         */
-        if (stockQuoteFromDatabaseOptional.isPresent()) {
-            /**
-             * Gets the stock quote from database
-             */
-            StockQuote stockQuoteFromDatabase = stockQuoteFromDatabaseOptional.get();
-            /**
-             * updates it with the new quotes
-             */
-            StockQuote updatedStockQuote = updateStockQuote(newStockQuote, stockQuoteFromDatabase);
-            /**
-             * then saves it into the database
-             */
-            stocksQuotesList.add(updatedStockQuote);
-        } else
-        /**
-         * If the stock does not exist in the database, then just save it since it is a new record
-         */
-            stocksQuotesList.add(newStockQuote);
+
+        newStockQuote.getQuotes()
+                .forEach((k, v) -> {
+                    /**
+                     * Converts from StockQuoteDTO to QuoteEntity
+                     * Obs:
+                     *      k = LocalDate
+                     *      v = price
+                     */
+                    QuoteEntity newQuote = QuoteEntity.builder()
+                            .stockId(newStockQuote.getId())
+                            .date(k)
+                            .price(v).build();
+                    /**
+                     * Saves it into the database
+                     */
+                    quoteRepository.save(newQuote);
+                });
     }
 
     @Override
-    public Set<StockQuote> getAllStockQuotes() {
+    public Set<StockQuoteDTO> getAllStockQuotes() {
         logger.info("DatabaseServiceImpl.getAllStockQuotes - Start.");
-        return stocksQuotesList;
+        List<QuoteEntity> quoteEntities = quoteRepository.findAll();
+        Set<StockQuoteDTO> stockQuoteSet = getStockQuoteDTOS(quoteEntities);
+        return stockQuoteSet;
     }
+
+    private Set<StockQuoteDTO> getStockQuoteDTOS(List<QuoteEntity> quoteEntities) {
+        Set<StockQuoteDTO> stockQuoteSet = new HashSet<>();
+        quoteEntities.stream()
+                .collect(groupingBy(QuoteEntity::getStockId))
+                .forEach((k, v) -> {
+                    String stockId = k;
+                    HashMap<LocalDate, String> quotes = new HashMap<>();
+                    v.forEach((quoteEntity) -> {
+                        quotes.put(quoteEntity.getDate(), quoteEntity.getPrice());
+                    });
+                    stockQuoteSet.add(
+                            StockQuoteDTO.builder()
+                                    .id(stockId)
+                                    .quotes(quotes).build());
+                });
+        return stockQuoteSet;
+    }
+
 
     @Override
-    public StockQuote getStockQuoteById(String stockId) {
+    public StockQuoteDTO getStockQuoteById(String stockId) {
         logger.info("DatabaseServiceImpl.getStockQuoteById - Start - Stock quote name: {}.", stockId);
-        Optional<StockQuote> stockQuoteFromDatabaseOptional = findStockQuoteById(stockId);
-        return stockQuoteFromDatabaseOptional.orElseThrow(StockNotFoundException::new);
-    }
 
-    private Optional<StockQuote> findStockQuoteById(String stockId) {
-        return stocksQuotesList.stream()
-                .filter(stockQuote -> stockQuote.getId().equals(stockId))
-                .findFirst();
-    }
+        List<QuoteEntity> quoteEntityList = quoteRepository.findByStockId(stockId);
+        Set<StockQuoteDTO> stockQuoteDTOS = getStockQuoteDTOS(quoteEntityList);
 
-    private StockQuote updateStockQuote(StockQuote stockQuote, StockQuote stockQuoteFromDatabase) {
-        HashMap<LocalDate, String> quotesFromDatabaseQuotes = stockQuoteFromDatabase.getQuotes();
-        quotesFromDatabaseQuotes.putAll(stockQuote.getQuotes());
-        stockQuoteFromDatabase.setQuotes(quotesFromDatabaseQuotes);
-        return stockQuoteFromDatabase;
+        return stockQuoteDTOS.stream().findFirst().orElseThrow(StockNotFoundException::new);
     }
 
 }

@@ -1,7 +1,7 @@
 package dev.gustavoteixeira.api.stockquotemanager.client;
 
 import dev.gustavoteixeira.api.stockquotemanager.dto.ApplicationDataDTO;
-import dev.gustavoteixeira.api.stockquotemanager.dto.Stock;
+import dev.gustavoteixeira.api.stockquotemanager.dto.StockDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +13,7 @@ import java.util.List;
 public interface StockManagerClient {
 
     @GetMapping("/stock")
-    List<Stock> getAllStocks();
+    List<StockDTO> getAllStocks();
 
     @PostMapping("/notification")
     void notify(@RequestBody ApplicationDataDTO applicationData);

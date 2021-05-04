@@ -1,6 +1,6 @@
 package dev.gustavoteixeira.api.stockquotemanager.service;
 
-import dev.gustavoteixeira.api.stockquotemanager.dto.StockQuote;
+import dev.gustavoteixeira.api.stockquotemanager.dto.StockQuoteDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,10 +10,10 @@ public interface StockQuoteService {
 
     Logger logger = LoggerFactory.getLogger(StockQuoteService.class);
 
-    void createNewStockQuote(StockQuote stock);
+    void createNewStockQuote(StockQuoteDTO stock);
 
-    StockQuote getStockQuoteById(String stockId);
+    StockQuoteDTO getStockQuoteById(String stockId);
 
-    Set<StockQuote> getAllStockQuotes();
+    Set<StockQuoteDTO> getAllStockQuotes();
 
 }

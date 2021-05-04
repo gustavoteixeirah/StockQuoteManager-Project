@@ -1,6 +1,6 @@
 package dev.gustavoteixeira.api.stockquotemanager.service.impl;
 
-import dev.gustavoteixeira.api.stockquotemanager.dto.StockQuote;
+import dev.gustavoteixeira.api.stockquotemanager.dto.StockQuoteDTO;
 import dev.gustavoteixeira.api.stockquotemanager.exception.StockNotRegisteredException;
 import dev.gustavoteixeira.api.stockquotemanager.service.CachingService;
 import dev.gustavoteixeira.api.stockquotemanager.service.DatabaseService;
@@ -21,13 +21,13 @@ public class StockQuoteServiceImpl implements StockQuoteService {
     private DatabaseService databaseService;
 
     @Override
-    public Set<StockQuote> getAllStockQuotes() {
+    public Set<StockQuoteDTO> getAllStockQuotes() {
         logger.info("StockQuoteServiceImpl.getAllStockQuotes - Start.");
         return databaseService.getAllStockQuotes();
     }
 
     @Override
-    public void createNewStockQuote(StockQuote stockQuote) {
+    public void createNewStockQuote(StockQuoteDTO stockQuote) {
         logger.info("StockQuoteServiceImpl.createNewStockQuote - Start - Stock quote name: {}.", stockQuote.getId());
         /**
          * A user is allowed to create stockQuote quotes on stockQuote-quote-manager only if
@@ -43,7 +43,7 @@ public class StockQuoteServiceImpl implements StockQuoteService {
     }
 
     @Override
-    public StockQuote getStockQuoteById(String stockId) {
+    public StockQuoteDTO getStockQuoteById(String stockId) {
         logger.info("StockQuoteServiceImpl.getStockQuoteById - Start - Stock quote name: {}.", stockId);
         return databaseService.getStockQuoteById(stockId);
     }

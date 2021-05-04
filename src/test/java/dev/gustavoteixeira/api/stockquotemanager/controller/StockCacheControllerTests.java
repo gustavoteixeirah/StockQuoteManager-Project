@@ -32,5 +32,4 @@ public class StockCacheControllerTests {
                 .andExpect(status().isOk());
     }
 
-
 }

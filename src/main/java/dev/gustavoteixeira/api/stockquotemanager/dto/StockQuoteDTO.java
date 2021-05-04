@@ -1,15 +1,19 @@
 package dev.gustavoteixeira.api.stockquotemanager.dto;
 
+
 import lombok.*;
+
+import java.time.LocalDate;
+import java.util.HashMap;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Stock {
+public class StockQuoteDTO {
 
     private String id;
-    private String description;
+    private HashMap<LocalDate, String> quotes;
 
 }
