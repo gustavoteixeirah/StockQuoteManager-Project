@@ -16,5 +16,5 @@ public interface CachingService {
 
     boolean stockIsRegistered(String stockName);
 
-    void cleanCache();
+    void clearCache();
 }

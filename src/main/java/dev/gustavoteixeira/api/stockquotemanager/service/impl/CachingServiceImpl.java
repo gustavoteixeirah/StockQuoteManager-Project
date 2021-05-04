@@ -50,7 +50,7 @@ public class CachingServiceImpl implements CachingService {
     }
 
     @Override
-    public void cleanCache() {
+    public void clearCache() {
         logger.info("CachingServiceImpl.cleanCache - Start.");
         registeredStocks.clear();
         logger.info("CachingServiceImpl.cleanCache - End.");

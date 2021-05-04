@@ -1,4 +1,4 @@
-name: Test, Build and Verify
+name: Package
 
 on:
   push:
@@ -16,9 +16,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Maven Test
-        run: mvn -B test
+#      - name: Maven Test
+#        run: mvn -B test
       - name: Maven Package
         run: mvn -B clean package -DskipTests
-      - name: Maven Verify
-        run: mvn -B clean verify
+#      - name: Maven Verify
+#        run: mvn -B clean verify

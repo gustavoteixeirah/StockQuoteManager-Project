@@ -20,12 +20,12 @@ public class StockCacheController {
     private CachingService cachingService;
 
     @DeleteMapping
-    public ResponseEntity<Void> cleanCache() {
-        logger.info("StockCacheController.cleanCache - Start - Cleaning cache.");
-        cachingService.cleanCache();
+    public ResponseEntity<Void> clearCache() {
+        logger.info("StockCacheController.clearCache - Start - Cleaning cache.");
+        cachingService.clearCache();
 
 
-        logger.info("StockCacheController.cleanCache - End - Finished cleaning cache.");
+        logger.info("StockCacheController.clearCache - End - Finished cleaning cache.");
         return ResponseEntity.ok().build();
     }
 

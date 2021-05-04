@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Set;
 
 @Controller
@@ -29,9 +31,14 @@ public class StockQuoteController {
         logger.info("StockQuoteController.createNewStockQuote - Start - Stock quote identifier: {}.", stockQuote.getId());
 
         stockQuoteService.createNewStockQuote(stockQuote);
-        //Implementar URI location
 
-        return ResponseEntity.ok().build();
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(stockQuote.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).build();
     }
 
     /**
