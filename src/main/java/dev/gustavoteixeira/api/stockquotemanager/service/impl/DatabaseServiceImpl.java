@@ -50,20 +50,16 @@ public class DatabaseServiceImpl implements DatabaseService {
     public Set<StockQuoteDTO> getAllStockQuotes() {
         logger.info("DatabaseServiceImpl.getAllStockQuotes - Start.");
         List<QuoteEntity> quoteEntities = quoteRepository.findAll();
-        Set<StockQuoteDTO> stockQuoteSet = getStockQuoteDTOS(quoteEntities);
-        return stockQuoteSet;
+        return getStockQuoteDTOS(quoteEntities);
     }
 
     private Set<StockQuoteDTO> getStockQuoteDTOS(List<QuoteEntity> quoteEntities) {
         Set<StockQuoteDTO> stockQuoteSet = new HashSet<>();
         quoteEntities.stream()
                 .collect(groupingBy(QuoteEntity::getStockId))
-                .forEach((k, v) -> {
-                    String stockId = k;
+                .forEach((stockId, quoteEntityList) -> {
                     HashMap<LocalDate, String> quotes = new HashMap<>();
-                    v.forEach((quoteEntity) -> {
-                        quotes.put(quoteEntity.getDate(), quoteEntity.getPrice());
-                    });
+                    quoteEntityList.forEach(quoteEntity -> quotes.put(quoteEntity.getDate(), quoteEntity.getPrice()));
                     stockQuoteSet.add(
                             StockQuoteDTO.builder()
                                     .id(stockId)

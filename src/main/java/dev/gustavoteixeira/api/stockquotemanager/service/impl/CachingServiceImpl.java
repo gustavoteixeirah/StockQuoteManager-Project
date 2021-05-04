@@ -6,12 +6,14 @@ import dev.gustavoteixeira.api.stockquotemanager.service.CachingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class CachingServiceImpl implements CachingService {
 
+    private List<String> registeredStocks = new ArrayList<>();
 
     @Autowired
     private StockManagerClient stockManager;
