@@ -12,17 +12,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Order(0)
-class MyApplicationListener
+class StockQuoteManagerApplicationListener
         implements ApplicationListener<ApplicationReadyEvent> {
 
-    private static final Logger logger = LoggerFactory.getLogger(MyApplicationListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(StockQuoteManagerApplicationListener.class);
 
     @Autowired
     private StockManagerClient stockManager;
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
-        logger.info("MyApplicationListener.onApplicationEvent - Start - Registering this application on stock-manager...");
+        logger.info("StockQuoteManagerApplicationListener.onApplicationEvent - Start - Registering this application on stock-manager...");
         ApplicationDataDTO applicationData = ApplicationDataDTO.builder()
                 .host("localhost")
                 .port(8081).build();

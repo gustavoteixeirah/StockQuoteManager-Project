@@ -12,11 +12,13 @@ import java.util.stream.Collectors;
 @Service
 public class CachingServiceImpl implements CachingService {
 
+
     @Autowired
     private StockManagerClient stockManager;
 
     @Override
     public void populateCache() {
+        logger.info("CachingServiceImpl.populateCache - Start.");
         /**
          * Get the currently registered stocks
          */
@@ -34,6 +36,7 @@ public class CachingServiceImpl implements CachingService {
 
     @Override
     public boolean stockIsRegistered(String stockName) {
+        logger.info("CachingServiceImpl.stockIsRegistered - Start - Stock name: {}.", stockName);
         /**
          * When validating a stock, whenever the cache is empty, it should populate it from stock-manager service
          */
@@ -48,7 +51,9 @@ public class CachingServiceImpl implements CachingService {
 
     @Override
     public void cleanCache() {
+        logger.info("CachingServiceImpl.cleanCache - Start.");
         registeredStocks.clear();
+        logger.info("CachingServiceImpl.cleanCache - End.");
     }
 
 }

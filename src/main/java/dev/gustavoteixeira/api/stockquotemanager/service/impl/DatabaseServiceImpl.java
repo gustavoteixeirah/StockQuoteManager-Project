@@ -1,7 +1,7 @@
 package dev.gustavoteixeira.api.stockquotemanager.service.impl;
 
 import dev.gustavoteixeira.api.stockquotemanager.dto.StockQuote;
-import dev.gustavoteixeira.api.stockquotemanager.exception.StockNotRegisteredException;
+import dev.gustavoteixeira.api.stockquotemanager.exception.StockNotFoundException;
 import dev.gustavoteixeira.api.stockquotemanager.service.DatabaseService;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +19,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Override
     public void persistStockQuote(StockQuote newStockQuote) {
+        logger.info("DatabaseServiceImpl.persistStockQuote - Start - Stock quote name: {}.", newStockQuote.getId());
         /**
          * Search in the database by stock name
          */
@@ -40,22 +41,23 @@ public class DatabaseServiceImpl implements DatabaseService {
              */
             stocksQuotesList.add(updatedStockQuote);
         } else
-            /**
-             * If the stock does not exist in the database, then just save it since it is a new record
-             */
+        /**
+         * If the stock does not exist in the database, then just save it since it is a new record
+         */
             stocksQuotesList.add(newStockQuote);
     }
 
     @Override
     public Set<StockQuote> getAllStockQuotes() {
+        logger.info("DatabaseServiceImpl.getAllStockQuotes - Start.");
         return stocksQuotesList;
     }
 
     @Override
     public StockQuote getStockQuoteById(String stockId) {
+        logger.info("DatabaseServiceImpl.getStockQuoteById - Start - Stock quote name: {}.", stockId);
         Optional<StockQuote> stockQuoteFromDatabaseOptional = findStockQuoteById(stockId);
-
-        return stockQuoteFromDatabaseOptional.orElseThrow(StockNotRegisteredException::new);
+        return stockQuoteFromDatabaseOptional.orElseThrow(StockNotFoundException::new);
     }
 
     private Optional<StockQuote> findStockQuoteById(String stockId) {
